@@ -55,7 +55,7 @@ public class ServletController extends HttpServlet {
 			getPageNewAdd(request, response);
 
 		} else if (action.equals("/delete")) {
-			deleteBook(Integer.parseInt(request.getParameter("id")), request, response);
+			deleteBook(enm.find(Book.class, Integer.parseInt(request.getParameter("id"))), request, response);
 		} else if (action.equals("/update")) {
 			int id = Integer.parseInt(request.getParameter("id"));
 			try {
@@ -92,10 +92,22 @@ public class ServletController extends HttpServlet {
 
 			response.sendRedirect("index");
 		} else if (action.equals("/updateitem")) {
+			Book book = new Book();
 
-		// updateBook(enm.find(Book.class, request.getParameter("id")),request.getParameter("title"), request.getParameter("author"),Double.parseDouble(request.getParameter("price")), response);
-		//System.out.println(enm.find(Book.class, request.getParameter("id")).getTitle());
-		 
+			enm.getTransaction().begin();
+
+			book = enm.find(Book.class, Integer.parseInt(request.getParameter("id")));
+			System.out.println(book.getTitle());
+
+			book.setTitle(request.getParameter("title"));
+			book.setAuthor(request.getParameter("author"));
+			book.setPrice(Double.parseDouble(request.getParameter("price")));  
+
+			enm.merge(book);
+
+			enm.getTransaction().commit();
+
+			response.sendRedirect("index");
 
 		}
 	}
@@ -103,7 +115,7 @@ public class ServletController extends HttpServlet {
 	private void showBooks(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		enm.getTransaction().begin();
-		//enm.joinTransaction();
+		// enm.joinTransaction();
 		ArrayList<Book> book_list = new ArrayList();
 		// book_list=(ArrayList<Book>) enm.createQuery("select * from book");
 
@@ -117,7 +129,7 @@ public class ServletController extends HttpServlet {
 
 	private void addBooks(HttpServletRequest request, HttpServletResponse response) {
 		enm.getTransaction().begin();
-		//enm.joinTransaction();
+		// enm.joinTransaction();
 		enm.persist(new Book(request.getParameter("title"), request.getParameter("author"),
 				Double.parseDouble(request.getParameter("price"))));
 		enm.getTransaction().commit();
@@ -129,25 +141,26 @@ public class ServletController extends HttpServlet {
 		disp.forward(request, response);
 	}
 
-	private void deleteBook(int id, HttpServletRequest request, HttpServletResponse respense) throws IOException {
+	private void deleteBook(Book book, HttpServletRequest request, HttpServletResponse respense) throws IOException {
 
 		// bookDao.delete(id);
 		enm.getTransaction().begin();
-		//enm.joinTransaction();
-		enm.remove(id);
+		// enm.joinTransaction();
+		enm.remove(book);
 		enm.getTransaction().commit();
 		respense.sendRedirect("index");
 
 	}
 
-	private void updateBook(Book book,String title,String author,Double price, HttpServletResponse respense)
+	private void updateBook(Book book, String title, String author, Double price, HttpServletResponse respense)
 			throws ClassNotFoundException, SQLException, IOException {
-		
+
 		enm.getTransaction().begin();
 		book.setTitle(title);
 		book.setAuthor(author);
 		book.setPrice(price);
-		//enm.joinTransaction();
+		// enm.joinTransaction();
+		System.out.println(book.getTitle());
 		enm.persist(book);
 		enm.getTransaction().commit();
 		// bookDao.update(id, book);
