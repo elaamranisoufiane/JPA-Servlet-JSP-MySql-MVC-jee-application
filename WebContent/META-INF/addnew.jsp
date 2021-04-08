@@ -35,7 +35,7 @@
 			</tr>
 			<tr>
 				<td><label>price :</label></td>
-				<td><input type="number" name="price" /></td>
+				<td><input type="text" name="price" /></td>
 			</tr>
 			<tr>
 				<td><input type="reset" value="RESET" /></td>

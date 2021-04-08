@@ -35,7 +35,7 @@
 			</tr>
 			<tr>
 				<td><label>price :</label></td>
-				<td><input type="number" name="price" value="${book.getPrice()}"/></td>
+				<td><input type="text" name="price" value="${book.getPrice()}"/></td>
 			</tr>
 			<tr>
 				<td><input type="reset" value="RESET" /></td>
