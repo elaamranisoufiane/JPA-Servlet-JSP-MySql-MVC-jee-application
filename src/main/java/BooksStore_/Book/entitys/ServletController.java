@@ -9,9 +9,6 @@
 
 package BooksStore_.Book.entitys;
 
-
-
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -23,13 +20,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 /**
  * Servlet implementation class ServletController
  */
 //@WebServlet("/Books/*")
 public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	//private BookDao bookDao;
+	private EntityManagerFactory enmf;
+	private EntityManager enm;
+	// private BookDao bookDao;
 
 	/**
 	 * @throws SQLException
@@ -39,8 +39,9 @@ public class ServletController extends HttpServlet {
 
 	public ServletController() throws SQLException, ClassNotFoundException {
 		super();
-		
-		//bookDao = new BookDao();
+		enmf = Persistence.createEntityManagerFactory("BooksStore");
+		enm = enmf.createEntityManager();
+		// bookDao = new BookDao();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,14 +49,8 @@ public class ServletController extends HttpServlet {
 		String action = request.getPathInfo();
 		System.out.println(action);
 		if (action.equals("/new")) {
-			EntityManagerFactory enmf = Persistence.createEntityManagerFactory("BooksStore");
-			EntityManager enm = enmf.createEntityManager();
-			enm.getTransaction().begin();
-			enm.joinTransaction();
-			enm.persist(new Book("_test", "_test", 160));
-			enm.persist(new Book("_test", "_test", 160));
-			enm.getTransaction().commit();
-			//getPageNewAdd(request, response);
+
+			getPageNewAdd(request, response);
 
 		} else if (action.equals("/delete")) {
 			deleteBook(Integer.parseInt(request.getParameter("id")), request, response);
@@ -113,13 +108,10 @@ public class ServletController extends HttpServlet {
 	}
 
 	private void addBooks(HttpServletRequest request, HttpServletResponse response) {
-		
-		/*
-		 * try { bookDao.insertItem(new Book((String) request.getParameter("title"),
-		 * (String) request.getParameter("author"), Double.parseDouble((String)
-		 * request.getParameter("price")))); } catch (ClassNotFoundException |
-		 * SQLException e) { // TODO Auto-generated catch block e.printStackTrace(); }
-		 */
+		enm.getTransaction().begin();
+		enm.joinTransaction();
+	    enm.persist(new Book(request.getParameter("title"), request.getParameter("author"), Double.parseDouble(request.getParameter("price"))));
+		enm.getTransaction().commit();
 	}
 
 	private void getPageNewAdd(HttpServletRequest request, HttpServletResponse response)
@@ -129,16 +121,16 @@ public class ServletController extends HttpServlet {
 	}
 
 	private void deleteBook(int id, HttpServletRequest request, HttpServletResponse respense) throws IOException {
-		 
-			//bookDao.delete(id);
-			respense.sendRedirect("index");
-		 
+
+		// bookDao.delete(id);
+		respense.sendRedirect("index");
+
 	}
 
 	private void updateBook(int id, Book book, HttpServletResponse respense)
 			throws ClassNotFoundException, SQLException, IOException {
 
-		//bookDao.update(id, book);
+		// bookDao.update(id, book);
 		respense.sendRedirect("index");
 
 	}

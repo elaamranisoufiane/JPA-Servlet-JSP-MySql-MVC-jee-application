@@ -15,7 +15,7 @@
             <property name="javax.persistence.jdbc.password" value="" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
             <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="create" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
             <property name="javax.persistence.validation.group.pre-persist" value="BooksStore_.Book.entitys.Book"/>
             <property name="javax.persistence.validation.group.pre-update" value="BooksStore_.Book.entitys.Book"/>
             <property name="javax.persistence.validation.group.pre-remove" value="BooksStore_.Book.entitys.Book"/>
